@@ -14,14 +14,16 @@ clipboard.
 When visiting a team page, the extension extracts the summoner names of all confirmed players.
 When visiting a team page, the extension extracts the summoner names of:
 
-- players selected by the opposing team, if the viewing user is in one of the participating teams
-- all players selected for the match by either team
-  Buttons for targeting one of the teams manually can be accessed by right-clicking the page action when viewing a match
-  page.
+- players selected by the opposing team, if the viewing user is in one of the participating teams, or otherwise
+- all players selected for the match by either team.
+
+Buttons for targeting one of the teams manually can be accessed by right-clicking the page action when viewing a match page.
 
 ## Installation
 Download the .xpi file from this repository. Open a new tab and type about:addons in the url bar.
 Click on the gear icon, select 'Install Add-on from file' and select the downloaded .xpi file.
+
+Firefox may initially block opening the op.gg tab. In that case you need to allow primeleague.gg to open popup-windows.
 
 You can uninstall the extension on that same page, by finding the extension in the list, pressing '...' and then
 selecting 'Remove'.
