@@ -1,0 +1,30 @@
+{
+  "manifest_version": 2,
+  "name": "PrimeLeague op.gg Button",
+  "version": "1.0",
+
+  "description": "Adds a page action that generates op.gg links from primeleague.gg match or team pages.",
+  "icons": {
+    "48": "icons/plopgg.svg"
+  },
+
+  "background": {
+    "scripts": ["scraping_util.js", "plopgg.js"]
+  },
+
+  "content_scripts": [{
+    "matches": ["https://www.primeleague.gg/*"],
+    "js": ["dependencies/jquery-3.7.1.min.js", "scraping_util.js"]
+  }],
+
+  "page_action": {
+    "default_icon": "icons/plopgg.svg"
+  },
+
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "menus",
+    "clipboardWrite"
+  ]
+}
