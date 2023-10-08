@@ -3,7 +3,7 @@
   "name": "PrimeLeague op.gg Button",
   "version": "1.0",
 
-  "description": "Adds a page action that generates op.gg links from primeleague.gg match or team pages.",
+  "description": "Adds a page action that generates op.gg links from primeleague.gg match or team pages. Generated op.gg links are opened in a new tab and copied to the clipboard.",
   "icons": {
     "48": "icons/plopgg.svg"
   },
