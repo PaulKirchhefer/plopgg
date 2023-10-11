@@ -14,8 +14,8 @@ clipboard.
 When visiting a team page, the extension extracts the summoner names of all confirmed players.
 When visiting a team page, the extension extracts the summoner names of:
 
-- players selected by the opposing team, if the viewing user is in one of the participating teams, or otherwise
-- all players selected for the match by either team.
+- players selected by the opposing team, if the viewing user is in one of the participating teams, 
+- or otherwise all players selected for the match by either team.
 
 Buttons for targeting one of the teams manually can be accessed by right-clicking the page action when viewing a match page.
 

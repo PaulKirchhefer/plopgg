@@ -29,7 +29,7 @@ function openInNewTab(tab, url) {
     if(!tab?.id || !url) return;
 
     browser.tabs.executeScript(tab.id,{
-        code: `window.open('${url}', '_blank').focus()`
+        code: `window?.open('${url}', '_blank')?.focus()`
     });
 }
 
@@ -65,10 +65,11 @@ function onPlopgg(tab, teamNumber) {
                 }
             }
         }
+        console.log("Extracted: ", result, "\nMapped to names: ", names);
 
         if (names?.length > 0) {
             const opggUrl = getOpggUrl(names);
-            navigator.clipboard.writeText(opggUrl);
+            navigator?.clipboard?.writeText(opggUrl);
             openInNewTab(tab, opggUrl);
         }
     });
@@ -104,13 +105,6 @@ function initPlopggButton(tab) {
         plopggPageAction.hide(tabId);
     }
 }
-
-const gettingAllTabs = browser.tabs.query({});
-gettingAllTabs.then((tabs) => {
-  for (let tab of tabs) {
-    initPlopggButton(tab);
-  }
-});
 
 browser.tabs.onUpdated.addListener((id, changeInfo, tab) => initPlopggButton(tab), {properties: ['url', 'status']});
 
