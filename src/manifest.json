@@ -1,7 +1,15 @@
 {
   "manifest_version": 2,
   "name": "PrimeLeague op.gg Button",
-  "version": "1.0",
+  "version": "1.1",
+  "author": "Paul Kirchhefer",
+  "homepage_url": "https://github.com/PaulKirchhefer/plopgg",
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{bc47c7e2-dfd3-41ab-aad7-75b9c1abff6e}"
+    }
+  },
 
   "description": "Adds a page action that generates op.gg links from primeleague.gg match or team pages. Generated op.gg links are opened in a new tab and copied to the clipboard.",
   "icons": {

@@ -43,11 +43,11 @@ const PLOPGG_SCRAPING_UTIL = (() => {
         const url = document.URL;
         if (!isTeamUrl(url)) return undefined;
         
-        const members = $(document).find('.league-team-members >> .content-portrait-grid-l').find("li");
+        const members = $(document).find('.league-team-members').find("li");
         const confirmedPlayers = [];
         for (let i = 0; i < members.length; i++) {
             const memberItem = $(members[i]);
-            if (memberItem.find('.txt-status-positive').length > 0) {
+            if (memberItem.find('.txt-status-positive').length == 1) {
                 confirmedPlayers.push(memberItem);
             }
         }
