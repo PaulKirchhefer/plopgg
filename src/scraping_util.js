@@ -10,14 +10,12 @@ const PLOPGG_SCRAPING_UTIL = (() => {
         return !!url && url.startsWith(MATCH_URL_PREFIX);
     }
 
-    function getFirstElement(queryResult) {
+    function getSingleElement(queryResult) {
         return queryResult?.length == 1 ? queryResult[0] : undefined;
     }
 
     function getOwnTeam() {
-        if (!$) return undefined;
-        
-        const myTeamLink = getFirstElement($(document).find(`[href*="${TEAM_URL_PREFIX}"]`))?.getAttribute("href");
+        const myTeamLink = document?.querySelector('#sidebar')?.querySelector(`[href*="${TEAM_URL_PREFIX}"]`)?.getAttribute("href");
 
         const from = myTeamLink?.indexOf("-", TEAM_URL_PREFIX.length) ?? -1;
 
@@ -38,34 +36,28 @@ const PLOPGG_SCRAPING_UTIL = (() => {
     }
 
     function getRosterNamesFromTeamPage() {
-        if (!$) return undefined;
-
         const url = document.URL;
         if (!isTeamUrl(url)) return undefined;
-        
-        const members = $(document).find('.league-team-members').find("li");
-        const confirmedPlayers = [];
+
+        const members = document?.querySelector('.league-team-members')?.querySelectorAll('li');
+        const names = [];
         for (let i = 0; i < members.length; i++) {
-            const memberItem = $(members[i]);
-            if (memberItem.find('.txt-status-positive').length == 1) {
-                confirmedPlayers.push(memberItem);
+            const memberItem = members[i];
+            const memberName = getSingleElement(memberItem.querySelectorAll('[title*="Summoner Name"]'))?.innerText;
+            if (!!memberName) {
+                const confirmed = memberItem.querySelectorAll('.txt-status-positive').length == 1;
+                names.push({ name: memberName, confirmed: confirmed });
             }
         }
-        const names = confirmedPlayers.map(player => player.find('[title*="Summoner Name"]'))
-                .map(getFirstElement)
-                .map(nameElement => nameElement?.innerText)
-                .filter(name => !!name);
-        return {roster: names};
+        return { roster: names };
     }
     
     function getLineupNames(lineupElement) {
-        if (!$) return undefined;
-
-        const playerElements = lineupElement?.find('li');
+        const playerElements = lineupElement?.querySelectorAll('li');
         const summonerNames = [];
         for (let i = 0; i < playerElements?.length; i++) {
-            const playerElement = $(playerElements[i]);
-            const textElements = playerElement?.find('.txt-info');
+            const playerElement = playerElements[i];
+            const textElements = playerElement?.querySelectorAll('.txt-info');
             const summonerName = textElements?.length == 2 ? textElements[1]?.innerText : undefined;
 
             if (!!summonerName) summonerNames.push(summonerName);
@@ -75,10 +67,8 @@ const PLOPGG_SCRAPING_UTIL = (() => {
     }
 
     function getLineupNamesFromMatchPage() {
-        if (!$) return undefined;
-        
-        const lineup1 = getLineupNames($(document).find('#league-match-lineup1'));
-        const lineup2 = getLineupNames($(document).find('#league-match-lineup2'));
+        const lineup1 = getLineupNames(document.querySelector('#league-match-lineup1'));
+        const lineup2 = getLineupNames(document.querySelector('#league-match-lineup2'));
 
         const ownTeam = getOwnTeam();
         const vsString = getMatchVsString();

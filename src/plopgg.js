@@ -6,7 +6,10 @@ const TEAM_1_MENU_ID = "team-1-menu-item";
 const TEAM_2_MENU_ID = "team-2-menu-item";
 
 const TEAM_MENU_ITEM = {
-    contexts: ["page_action"]
+    contexts: ["page_action"],
+    icons: {
+        16: "icons/plopgg.svg"
+      }
 };
 
 function hasPrefix(toCheck, prefix) {
@@ -40,7 +43,7 @@ function onPlopgg(tab, teamNumber) {
         const result = results?.[0];
         let names = undefined;
         if (isTeamPage(tab)) {
-            names = result?.roster;
+            names = result?.roster.map(r => r?.name).filter(n => !!n);
         }
         else if (isMatchPage(tab)) {
             const names1 = result?.lineup1;

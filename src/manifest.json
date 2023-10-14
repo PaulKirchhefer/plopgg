@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
-  "name": "PrimeLeague op.gg Button",
-  "version": "1.1",
+  "name": "Summoner Name Extractor for primeleague.gg",
+  "version": "2.0",
   "author": "Paul Kirchhefer",
   "homepage_url": "https://github.com/PaulKirchhefer/plopgg",
 
@@ -13,7 +13,7 @@
 
   "description": "Adds a page action that generates op.gg links from primeleague.gg match or team pages. Generated op.gg links are opened in a new tab and copied to the clipboard.",
   "icons": {
-    "48": "icons/plopgg.svg"
+    "1": "icons/plopgg.svg"
   },
 
   "background": {
@@ -22,7 +22,7 @@
 
   "content_scripts": [{
     "matches": ["https://www.primeleague.gg/*"],
-    "js": ["dependencies/jquery-3.7.1.min.js", "scraping_util.js"]
+    "js": ["scraping_util.js"]
   }],
 
   "page_action": {
