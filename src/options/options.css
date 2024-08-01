@@ -1,0 +1,55 @@
+body {
+    display: block;
+    margin: 0;
+}
+
+.flexCol {
+    display: flex;
+    flex-direction: column;
+    margin: 4px;
+}
+
+.buttonContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 2px;
+    margin-bottom: 2px;
+    border: 1px solid black;
+    border-radius: 3px;
+    gap: 2px;
+}
+
+.tabbedOnce {
+    margin-left: 25px;
+}
+
+.footer {
+    display: flex;
+    flex-direction: row-reverse;
+    margin: 4px;
+    gap: 4px;
+}
+
+.buttonHeader {
+    display: flex;
+    justify-content: space-between;
+}
+
+.iconButton {
+    width: 22px;
+    height: 22px;
+    padding: 1px;
+}
+
+.iconButton > img {
+    width: 16px;
+    height: 16px;
+}
+
+#addButton {
+    align-text: center;
+}
+
+[disabled] {
+    color: gray;
+}

@@ -1,1 +1,4 @@
-https://fontawesome.com/icons/people-group?f=classic&s=solid
+plopgg.svg:     https://fontawesome.com/icons/people-group?f=classic&s=solid
+delete.svg:     https://fontawesome.com/icons/trash-can?f=classic&s=regular
+up.svg:         https://fontawesome.com/icons/chevron-up?f=classic&s=solid
+down.svg:       https://fontawesome.com/icons/chevron-down?f=classic&s=solid
