@@ -1,13 +1,40 @@
 const PLOPGG_SCRAPING_UTIL = (() => {
-    const TEAM_URL_PREFIX = "https://www.primeleague.gg/leagues/teams/";
-    const MATCH_URL_PREFIX = "https://www.primeleague.gg/leagues/matches/";
+    const PL_URL_PREFIX = "https://www.primeleague.gg/leagues"
+    const TEAMS_INFIX = "/teams/";
+    const MAIN_TEAM_URL_PREFIX = `${PL_URL_PREFIX}${TEAMS_INFIX}`;
+    const ACTIVE_TEAM_URL_PREFIX = `${PL_URL_PREFIX}/prm/`;
+    const TEAM_URL_POSTFIX_REGEX = /\/teams\/[^\/]+$/;
+    const MATCH_URL_PREFIX = `${PL_URL_PREFIX}/matches/`;
 
-    function isTeamUrl(url) {
-        return !!url && url.startsWith(TEAM_URL_PREFIX);
+    function isMainTeamUrl(url) {
+        return !!url && url.startsWith(MAIN_TEAM_URL_PREFIX) && !!url.match(TEAM_URL_POSTFIX_REGEX);
+    }
+
+    function isActiveTeamUrl(url) {
+        return !!url && url.startsWith(ACTIVE_TEAM_URL_PREFIX) && !!url.match(TEAM_URL_POSTFIX_REGEX);
+    }
+
+    function isAnyTeamUrl(url) {
+        return isMainTeamUrl(url) || isActiveTeamUrl(url);
     }
 
     function isMatchUrl(url) {
         return !!url && url.startsWith(MATCH_URL_PREFIX);
+    }
+
+    function getTeamNameFromTeamUrl(url) {
+        if (!isAnyTeamUrl(url)) return undefined;
+
+        const from = url.lastIndexOf(TEAMS_INFIX);
+        const id = from < 0 ? undefined : url.substring(from + TEAMS_INFIX.length);
+
+        return getTeamNameFromId(id);
+    }
+
+    function getTeamNameFromId(id) {
+        const from = id?.indexOf("-") ?? -1;
+
+        return from < 0 ? undefined : id.substring(from + 1);
     }
 
     function getSingleElement(queryResult) {
@@ -15,11 +42,9 @@ const PLOPGG_SCRAPING_UTIL = (() => {
     }
 
     function getOwnTeam() {
-        const myTeamLink = document?.querySelector('#sidebar')?.querySelector(`[href*="${TEAM_URL_PREFIX}"]`)?.getAttribute("href");
+        const myTeamLink = document?.querySelector('#sidebar')?.querySelector(`[href*="${MAIN_TEAM_URL_PREFIX}"]`)?.getAttribute("href");
 
-        const from = myTeamLink?.indexOf("-", TEAM_URL_PREFIX.length) ?? -1;
-
-        return from < 0 ? undefined : myTeamLink.substring(from + 1) ?? undefined;
+        return getTeamNameFromTeamUrl(myTeamLink);
     }
     
     function getMatchVsString() {
@@ -37,11 +62,11 @@ const PLOPGG_SCRAPING_UTIL = (() => {
 
     function getRosterNamesFromTeamPage() {
         const url = document.URL;
-        if (!isTeamUrl(url)) return undefined;
+        if (!isActiveTeamUrl(url)) return undefined;
 
-        const members = document?.querySelector('.league-team-members')?.querySelectorAll('li');
+        const members = document?.querySelectorAll('li:has([title*="Summoner Name"])');
         const names = [];
-        for (let i = 0; i < members.length; i++) {
+        for (let i = 0; i < members?.length; i++) {
             const memberItem = members[i];
             const memberName = getSingleElement(memberItem.querySelectorAll('[title*="Summoner Name"]'))?.innerText;
             if (!!memberName) {
@@ -73,17 +98,15 @@ const PLOPGG_SCRAPING_UTIL = (() => {
         const ownTeam = getOwnTeam();
         const vsString = getMatchVsString();
 
-        const isLeftTeam = !!vsString && !!ownTeam && vsString.startsWith(ownTeam);
-        const isRightTeam = !!vsString && !!ownTeam && vsString.endsWith(ownTeam);
-
-        const ownTeamIndex = isLeftTeam != isRightTeam ? 1+isRightTeam : -1;
-
-        return {lineup1: lineup1, lineup2: lineup2, ownTeam: ownTeamIndex};
+        return {lineup1: lineup1, lineup2: lineup2, ownTeam, vsString};
     }
 
     return Object.freeze({
-        isTeamUrl,
+        isMainTeamUrl,
+        isActiveTeamUrl,
+        isAnyTeamUrl,
         isMatchUrl,
+        getTeamNameFromTeamUrl,
         getRosterNamesFromTeamPage,
         getLineupNamesFromMatchPage
     });

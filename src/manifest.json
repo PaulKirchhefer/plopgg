@@ -16,8 +16,12 @@
     "1": "icons/plopgg.svg"
   },
 
+  "options_ui": {
+    "page": "options/options.html"
+  },
+
   "background": {
-    "scripts": ["scraping_util.js", "plopgg.js"]
+    "scripts": ["scraping_util.js", "options/options_util.js", "plopgg.js"]
   },
 
   "content_scripts": [{
@@ -33,6 +37,7 @@
     "activeTab",
     "tabs",
     "menus",
-    "clipboardWrite"
+    "clipboardWrite",
+    "storage"
   ]
 }

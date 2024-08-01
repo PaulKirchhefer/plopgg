@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" name="color-scheme" />
+    <link rel="stylesheet" href="options.css" />
+</head>
+
+<body>
+<div id="buttonsContainer" class="flexCol">
+    <button id="addButton">+ Add new button</button>
+</div>
+<hr />
+<div class="flexCol">
+    On match pages, when no team is selected, omit player names of:
+    <div><input id="filterTeamsAutoMethod" type="checkbox"
+    /><label for="filterTeamsAutoMethod">team of currently logged in user</label></div>
+    <div><input id="filterTeamsSpecMethod" type="checkbox"
+    /><label for="filterTeamsSpecMethod">the following team(s) (insert team page link(s) - separate multiple links by
+    ';')</label></div>
+    <input id="specifiedTeams" class="tabbedOnce" type="text"/>
+</div>
+<br />
+<div class="footer">
+    <button id="reset">Restore default settings</button><button id="cancel">Cancel</button><button id="save">Save</button>
+</div>
+<script src="options_util.js"></script>
+<script src="options.js"></script>
+</body>
+</html>
