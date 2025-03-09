@@ -1,17 +1,20 @@
 const PLOPGG_SCRAPING_UTIL = (() => {
-    const PL_URL_PREFIX = "https://www.primeleague.gg/leagues"
+    const PL_URL_PREFIX = "https://www.primeleague.gg/";
     const TEAMS_INFIX = "/teams/";
-    const MAIN_TEAM_URL_PREFIX = `${PL_URL_PREFIX}${TEAMS_INFIX}`;
-    const ACTIVE_TEAM_URL_PREFIX = `${PL_URL_PREFIX}/prm/`;
-    const TEAM_URL_POSTFIX_REGEX = /\/teams\/[^\/]+$/;
-    const MATCH_URL_PREFIX = `${PL_URL_PREFIX}/matches/`;
+    const MAIN_TEAM_URL_REGEX =
+        /^https:\/\/www\.primeleague\.gg\/[^\/]+\/leagues\/teams\/[^\/]+([#\?].*)?$/;
+    const ACTIVE_TEAM_URL_REGEX =
+        /^https:\/\/www\.primeleague\.gg\/[^\/]+\/leagues\/prm\/[^\/]+\/teams\/[^\/]+([#\?].*)?$/;
+    const MATCH_URL_PREFIX_REGEX =
+        /^https:\/\/www\.primeleague\.gg\/[^\/]+\/leagues\/matches\//;
+    const URL_PARAMS_POSTFIX_REGEX = /([#\?].*)?$/;
 
     function isMainTeamUrl(url) {
-        return !!url && url.startsWith(MAIN_TEAM_URL_PREFIX) && !!url.match(TEAM_URL_POSTFIX_REGEX);
+        return !!url && !!url.match(MAIN_TEAM_URL_REGEX);
     }
 
     function isActiveTeamUrl(url) {
-        return !!url && url.startsWith(ACTIVE_TEAM_URL_PREFIX) && !!url.match(TEAM_URL_POSTFIX_REGEX);
+        return !!url && !!url.match(ACTIVE_TEAM_URL_REGEX);
     }
 
     function isAnyTeamUrl(url) {
@@ -19,14 +22,15 @@ const PLOPGG_SCRAPING_UTIL = (() => {
     }
 
     function isMatchUrl(url) {
-        return !!url && url.startsWith(MATCH_URL_PREFIX);
+        return !!url && !!url.match(MATCH_URL_PREFIX_REGEX);
     }
 
     function getTeamNameFromTeamUrl(url) {
         if (!isAnyTeamUrl(url)) return undefined;
 
-        const from = url.lastIndexOf(TEAMS_INFIX);
-        const id = from < 0 ? undefined : url.substring(from + TEAMS_INFIX.length);
+        const urlWithoutParams = url.replace(URL_PARAMS_POSTFIX_REGEX, "");
+        const from = urlWithoutParams.lastIndexOf(TEAMS_INFIX);
+        const id = from < 0 ? undefined : urlWithoutParams.substring(from + TEAMS_INFIX.length);
 
         return getTeamNameFromId(id);
     }
@@ -42,20 +46,29 @@ const PLOPGG_SCRAPING_UTIL = (() => {
     }
 
     function getOwnTeam() {
-        const myTeamLink = document?.querySelector('#sidebar')?.querySelector(`[href*="${MAIN_TEAM_URL_PREFIX}"]`)?.getAttribute("href");
+        const linkNodes = document?.querySelector('#sidebar')?.querySelectorAll(`[href*="${PL_URL_PREFIX}"]`);
 
-        return getTeamNameFromTeamUrl(myTeamLink);
+        for (let i = 0; i < linkNodes?.length; i++) {
+            const link = linkNodes[i].getAttribute("href");
+            if (!!link.match(MAIN_TEAM_URL_REGEX))
+                return getTeamNameFromTeamUrl(link);
+        }
+
+
+        return undefined;
     }
     
     function getMatchVsString() {
         const url = document.URL;
         if (!isMatchUrl(url)) return undefined;
-        
-        const from = url.indexOf("-", MATCH_URL_PREFIX.length);
+
+        const urlWithoutParams = url.replace(URL_PARAMS_POSTFIX_REGEX, "");
+        const prefix = urlWithoutParams.match(MATCH_URL_PREFIX_REGEX)[0];
+        const from = urlWithoutParams.indexOf("-", prefix.length);
 
         if (from < 0) return undefined;
 
-        const vsString = url.substring(from + 1);
+        const vsString = urlWithoutParams.substring(from + 1);
         
         return vsString.indexOf('-vs-') < 0 ? undefined : vsString;
     }
